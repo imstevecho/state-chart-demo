@@ -14,11 +14,10 @@ export default class App extends Component {
         states: {
             'formA': {
                 'next':  function() { browserHistory.push('/formA'); },
-                'gotoformC':  { target: 'formC'   },
             },
             'formB': {
-                'previous':  function() { console.log('form B came here 1') },
-                'next':  function() { console.log('form B came here 2') }
+                'previous':  function() { browserHistory.push('/formA') },
+                'next':  function() { browserHistory.push('/formC') }
             }
         }
 

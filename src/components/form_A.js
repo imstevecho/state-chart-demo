@@ -23,6 +23,8 @@ export default class FormA extends Component {
       }
     }
 
+    console.log(params);
+
     browserHistory.push('/formB');
 
 
