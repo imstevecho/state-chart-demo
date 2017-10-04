@@ -13,11 +13,16 @@ export default class App extends Component {
         initialState: "formA",
         states: {
             'formA': {
-                'next':  function() { browserHistory.push('/formA'); },
+                'next':  function(params) {
+                  console.log("params", params);
+                  browserHistory.push('/formA');
+                },
+                'guard': function() { console.log("came to guard"); return true; }
             },
             'formB': {
                 'previous':  function() { browserHistory.push('/formA') },
-                'next':  function() { browserHistory.push('/formC') }
+                'next':  function() { browserHistory.push('/formC') },
+                'guard': function() { console.log("came to guard"); return true; },
             }
         }
 
@@ -28,8 +33,8 @@ export default class App extends Component {
 
 
   componentDidMount() {
-    stateMachine.run();
-    stateMachine.dispatch('next');
+    stateMachine.run()
+    stateMachine.dispatch('next', {foo: 'bar'});
   }
 
 

@@ -11,31 +11,13 @@ import formD from './components/form_D';
 
 import reducers from './reducers';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import * as StateChart from '../lib/statechart'
 
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
 
 
-window.stateMachine = _.extend({
 
-    initialState: "formA",
-    states: {
-        'formA': {
-            'next':  function() { console.log('came here'); browserHistory.push('/formA'); },
-            'gotoformC':  { target: 'formC'   },
-        },
-        'formB': {
-            'previous':  { target: 'formA'  },
-            'next':  { target: 'formD'  }
-        }
-    }
-
-}, StateChart);
-
-
-stateMachine.run();
 
 
 

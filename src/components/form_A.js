@@ -25,8 +25,9 @@ export default class FormA extends Component {
 
     console.log(params);
 
-    browserHistory.push('/formB');
-
+    // browserHistory.push('/formB');
+    window.stateMachine.dispatch('formB', {foo: 'bar1'})
+    window.stateMachine.dispatch('next')
 
   }
 

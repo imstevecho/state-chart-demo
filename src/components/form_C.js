@@ -11,9 +11,6 @@ export default class FormC extends Component {
   handleSubmitClicked(e) {
     e.preventDefault();
 
-    console.log("came to form");
-
-
     let params= {};
     const form = e.target;
     for ( let i = 0; i < form.elements.length; i++ ) {
