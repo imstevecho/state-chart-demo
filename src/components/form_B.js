@@ -7,6 +7,7 @@ export default class FormB extends Component {
   constructor(props) {
     super(props);
     this.handleSubmitClicked = this.handleSubmitClicked.bind(this);
+    this.goPreviousPage = this.goPreviousPage.bind(this);
   }
 
   handleSubmitClicked(e) {
@@ -29,6 +30,11 @@ export default class FormB extends Component {
   }
 
 
+  goPreviousPage(e) {
+    window.stateMachine.dispatch('previous');
+  }
+
+
   render() {
     return (
       <div>
@@ -45,7 +51,7 @@ export default class FormB extends Component {
             <input type="text" className="form-control" name="grade" ref={(input) => this.input = input}/>
           </div>
           <div className="tab-pane" role="tabpanel">
-            <a className="btn btn-primary back">Go Back</a>
+            <a className="btn btn-primary back" onClick={this.goPreviousPage}>Go Back</a>
             <span>&nbsp;&nbsp;</span>
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>

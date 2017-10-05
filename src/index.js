@@ -31,35 +31,26 @@ window.stateMachine = _.extend({
             },
             "exit": function() {
               console.log("came to can exit");
-              const can_exit = this.valid();
-              if (can_exit) {
-
-              }
-              return false;
-            },
-            'next_form': function() {
-              console.log("in the next form");
             },
             "next":  {
               // target: "formC",
-              action: function() {
-
-                const s = this.state("formC");
-                console.log('in action');
+              action: function(params) {
+                let s = this.state("formC");
+                if (params.age >= 18) {
+                } else {
+                  s = this.state('formB');
+                }
                 this.transition(s);
               },
               guard: function(params) {
+                console.log("data validation goes here");
 
-                console.log(params);
-
-                if (params.work_or_student === 'work') {
-                  console.log("work");
+                if (params.work_or_student  && params.name && params.age) {
+                  return true
                 } else {
-                  console.log("student");
+                  console.log("validation error");
+                  return false;
                 }
-
-                console.log('came to guard');
-                return true;
               }
             }
         },
@@ -70,7 +61,9 @@ window.stateMachine = _.extend({
               browserHistory.push('/formB');
             },
             "next":  { target: "formC"  },
-            "previous": { target: "formA" }
+            "previous": {
+              target: "formA"
+            }
         },
         "formC": {
             "entry": function(params) {
