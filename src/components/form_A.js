@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
-import _  from 'lodash';
-
 
 export default class FormA extends Component {
-
 
   constructor(props) {
     super(props);
     this.handleSubmitClicked = this.handleSubmitClicked.bind(this);
+  }
+
+  componentDidMount() {
+
+    // window.stateMachine.initialState = 'formB';
+    window.stateMachine.run();
   }
 
   handleSubmitClicked(e) {
@@ -23,11 +26,7 @@ export default class FormA extends Component {
       }
     }
 
-    console.log(params);
-
-    // browserHistory.push('/formB');
-    window.stateMachine.dispatch('formB', {foo: 'bar1'})
-    window.stateMachine.dispatch('next')
+    window.stateMachine.dispatch('next', {foo: 'bar'});
 
   }
 

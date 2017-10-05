@@ -12,8 +12,6 @@ export default class FormB extends Component {
   handleSubmitClicked(e) {
     e.preventDefault();
 
-    console.log("came to form");
-
 
     let params= {};
     const form = e.target;
@@ -24,7 +22,8 @@ export default class FormB extends Component {
       }
     }
 
-    browserHistory.push('/formC');
+    // browserHistory.push('/formC');
+    window.stateMachine.dispatch('next', {foo: 'barb'});
 
 
   }
