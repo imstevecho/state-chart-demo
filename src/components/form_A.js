@@ -25,9 +25,6 @@ export default class FormA extends Component {
         params[e.name] = e.value;
       }
     }
-
-    window.stateMachine.dispatch('next', {...params});
-
   }
 
 

@@ -12,75 +12,76 @@ import formD from './components/form_D';
 import reducers from './reducers';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-import _  from 'lodash';
-import * as StateChart from '../lib/statechart'
+import StateMachine from 'javascript-state-machine';
 
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
+var count = 0;
 
-window.stateMachine = _.extend({
+var log = function(msg, separate) {
+  console.log(msg);
+};
 
-    initialState: "formA",
+var fsm = new StateMachine({
 
-    states: {
-        "formA": {
-            "entry": function() {
-              console.log("Came to formA");
-              browserHistory.push('/formA');
-            },
-            "exit": function() {
-              console.log("came to can exit");
-            },
-            "next":  {
-              // target: "formC",
-              action: function(params) {
-                let s = this.state("formC");
-                if (params.age >= 18) {
-                } else {
-                  s = this.state('formB');
-                }
-                this.transition(s);
-              },
-              guard: function(params) {
-                console.log("data validation goes here");
 
-                if (params.work_or_student  && params.name && params.age) {
-                  return true
-                } else {
-                  console.log("validation error");
-                  return false;
-                }
-              }
-            }
-        },
-        "formB": {
-            "entry": function(params) {
-              console.log("Came to formB");
-              console.log(params);
-              browserHistory.push('/formB');
-            },
-            "next":  { target: "formC"  },
-            "previous": {
-              target: "formA"
-            }
-        },
-        "formC": {
-            "entry": function(params) {
-              console.log("Came to formC");
-              console.log(params);
-              browserHistory.push('/formC');
-            },
-            "next":  { target: "formD"  },
-            "previous": { target: "formB" }
-        }
+  transitions: [
+    { name: 'start', from: 'none',   to: 'formA'  },
+    { name: 'formA', from: 'none',   to: 'formB' },
+    { name: 'formA', from: 'formB',  to: 'none'  },
+    { name: 'formB', from: 'formA',  to: 'formC' },
+    { name: 'formC', from: 'formA',  to: 'formD' },
+    { name: 'formC', from: 'formB',  to: 'formD' },
+    { name: 'formD', from: 'formC',  to: 'none'  },
+  ],
 
+
+
+  methods: {
+
+    onBeforeTransition: function(lifecycle) {
+      log("BEFORE: " + lifecycle.transition, true);
     },
-    valid: function() {
-      return false;
-    }
 
-}, StateChart);
+    onLeaveState: function(lifecycle) {
+      log("LEAVE: " + lifecycle.from);
+    },
+
+    onEnterState: function(lifecycle) {
+      log("ENTER: " + lifecycle.to);
+    },
+
+    onAfterTransition: function(lifecycle) {
+      log("AFTER: " + lifecycle.transition);
+      browserHistory.push('/formA');
+    },
+
+    onTransition: function(lifecycle) {
+      log("DURING: " + lifecycle.transition + " (from " + lifecycle.from + " to " + lifecycle.to + ")");
+    },
+
+    // onLeaveRed: function(lifecycle) {
+    //   return new Promise(function(resolve, reject) {
+    //     var msg = lifecycle.transition + ' to ' + lifecycle.to;
+    //     log("PENDING " + msg + " in ...3");
+    //     setTimeout(function() {
+    //       log("PENDING " + msg + " in ...2");
+    //       setTimeout(function() {
+    //         log("PENDING " + msg + " in ...1");
+    //         setTimeout(function() {
+    //           resolve();
+    //         }, 1000);
+    //       }, 1000);
+    //     }, 1000);
+    //   });
+    // }
+
+  }
+});
+
+fsm.start();
+
 
 
 
@@ -95,5 +96,4 @@ ReactDOM.render((
   , document.querySelector('.container'));
 
 
-window.stateMachine.run();
 
