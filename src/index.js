@@ -23,17 +23,18 @@ var log = function(msg, separate) {
   console.log(msg);
 };
 
-var fsm = new StateMachine({
+window.fsm = new StateMachine({
 
 
   transitions: [
     { name: 'start', from: 'none',   to: 'formA'  },
-    { name: 'formA', from: 'none',   to: 'formB' },
+    { name: 'formA', from: 'none',   to: 'formA' },
     { name: 'formA', from: 'formB',  to: 'none'  },
     { name: 'formB', from: 'formA',  to: 'formC' },
     { name: 'formC', from: 'formA',  to: 'formD' },
     { name: 'formC', from: 'formB',  to: 'formD' },
     { name: 'formD', from: 'formC',  to: 'none'  },
+    { name: 'goto', from: '*', to: function(s) { return s } }
   ],
 
 
@@ -50,38 +51,34 @@ var fsm = new StateMachine({
 
     onEnterState: function(lifecycle) {
       log("ENTER: " + lifecycle.to);
+      browserHistory.push(`/${lifecycle.transition}`);
     },
 
     onAfterTransition: function(lifecycle) {
       log("AFTER: " + lifecycle.transition);
-      browserHistory.push('/formA');
+
     },
 
     onTransition: function(lifecycle) {
       log("DURING: " + lifecycle.transition + " (from " + lifecycle.from + " to " + lifecycle.to + ")");
     },
 
-    // onLeaveRed: function(lifecycle) {
-    //   return new Promise(function(resolve, reject) {
-    //     var msg = lifecycle.transition + ' to ' + lifecycle.to;
-    //     log("PENDING " + msg + " in ...3");
-    //     setTimeout(function() {
-    //       log("PENDING " + msg + " in ...2");
-    //       setTimeout(function() {
-    //         log("PENDING " + msg + " in ...1");
-    //         setTimeout(function() {
-    //           resolve();
-    //         }, 1000);
-    //       }, 1000);
-    //     }, 1000);
-    //   });
-    // }
+
+    onFormA: function() {
+      console.log("came to form A");
+    },
+
+    onLeaveformA: function(lifecycle) {
+      console.log("leaving A");
+    }
 
   }
 });
 
-fsm.start();
+// fsm.start();
+fsm.formA();
 
+// fsm.goto('formD');
 
 
 
