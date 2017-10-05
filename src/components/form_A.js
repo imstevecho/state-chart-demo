@@ -11,7 +11,7 @@ export default class FormA extends Component {
   componentDidMount() {
 
     // window.stateMachine.initialState = 'formB';
-    window.stateMachine.run();
+    // window.stateMachine.run();
   }
 
   handleSubmitClicked(e) {
@@ -26,7 +26,7 @@ export default class FormA extends Component {
       }
     }
 
-    window.stateMachine.dispatch('next', {foo: 'bar'});
+    window.stateMachine.dispatch('next', {...params});
 
   }
 
@@ -47,10 +47,10 @@ export default class FormA extends Component {
           </div>
           <div className="form-group">
             <div className="radio">
-              <label><input type="radio" name="work_or_student"/> I am a student</label>
+              <label><input type="radio" name="work_or_student" value='student'/> I am a student</label>
             </div>
             <div className="radio">
-              <label><input type="radio" name="work_or_student"/> I work</label>
+              <label><input type="radio" name="work_or_student" value='work'/> I work</label>
             </div>
           </div>
 

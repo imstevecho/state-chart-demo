@@ -22,23 +22,6 @@ const createStoreWithMiddleware = applyMiddleware()(createStore);
 window.stateMachine = _.extend({
 
     initialState: "formA",
-    // states: {
-    //     'formA': {
-    //         'next':  function(params) {
-    //           console.log("params from formA", params);
-    //           browserHistory.push('/formB');
-    //         },
-    //         'guard': function() { console.log("came to guard"); return true; }
-    //     },
-    //     'formB': {
-    //         'previous':  function() { browserHistory.push('/formA') },
-    //         'next':  function() {
-    //           console.log("params from formB", params);
-    //           browserHistory.push('/formC')
-    //         },
-    //         'guard': function() { console.log("came to guard"); return true; },
-    //     }
-    // }
 
     states: {
         "formA": {
@@ -54,10 +37,31 @@ window.stateMachine = _.extend({
               }
               return false;
             },
+            'next_form': function() {
+              console.log("in the next form");
+            },
             "next":  {
-              target: "formB",
-              action: function() { console.log('in action');},
-              guard: function() { console.log('came to guard'); return true; } }
+              // target: "formC",
+              action: function() {
+
+                const s = this.state("formC");
+                console.log('in action');
+                this.transition(s);
+              },
+              guard: function(params) {
+
+                console.log(params);
+
+                if (params.work_or_student === 'work') {
+                  console.log("work");
+                } else {
+                  console.log("student");
+                }
+
+                console.log('came to guard');
+                return true;
+              }
+            }
         },
         "formB": {
             "entry": function(params) {
@@ -67,7 +71,17 @@ window.stateMachine = _.extend({
             },
             "next":  { target: "formC"  },
             "previous": { target: "formA" }
+        },
+        "formC": {
+            "entry": function(params) {
+              console.log("Came to formC");
+              console.log(params);
+              browserHistory.push('/formC');
+            },
+            "next":  { target: "formD"  },
+            "previous": { target: "formB" }
         }
+
     },
     valid: function() {
       return false;
@@ -86,3 +100,7 @@ ReactDOM.render((
     <Route path="/formD" component={formD} />
   </Router>)
   , document.querySelector('.container'));
+
+
+window.stateMachine.run();
+
