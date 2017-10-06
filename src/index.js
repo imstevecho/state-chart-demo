@@ -34,7 +34,15 @@ window.fsm = new StateMachine({
     { name: 'formC', from: 'formA',  to: 'formD' },
     { name: 'formC', from: 'formB',  to: 'formD' },
     { name: 'formD', from: 'formC',  to: 'none'  },
-    { name: 'goto', from: '*', to: function(s) { return s } }
+    { name: 'next',  from: '*', to: function(params) {
+        console.log(params);
+        if (params.age >= 18) {
+          return 'formC';
+        } else {
+          return 'formB';
+        }
+      }
+    }
   ],
 
 
@@ -42,7 +50,7 @@ window.fsm = new StateMachine({
   methods: {
 
     onBeforeTransition: function(lifecycle) {
-      log("BEFORE: " + lifecycle.transition, true);
+      log("BEFORE: " + lifecycle.to, true);
     },
 
     onLeaveState: function(lifecycle) {
@@ -51,7 +59,7 @@ window.fsm = new StateMachine({
 
     onEnterState: function(lifecycle) {
       log("ENTER: " + lifecycle.to);
-      browserHistory.push(`/${lifecycle.transition}`);
+      browserHistory.push(`/${lifecycle.to}`);
     },
 
     onAfterTransition: function(lifecycle) {
@@ -76,9 +84,9 @@ window.fsm = new StateMachine({
 });
 
 // fsm.start();
-fsm.formA();
+// fsm.formA();
 
-// fsm.goto('formD');
+fsm.start();
 
 
 

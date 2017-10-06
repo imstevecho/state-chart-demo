@@ -27,7 +27,7 @@ export default class FormA extends Component {
       }
     }
 
-    window.fsm.formB();
+    window.fsm.next(params);
   }
 
 
