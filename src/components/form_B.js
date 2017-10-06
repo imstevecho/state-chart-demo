@@ -31,7 +31,7 @@ export default class FormB extends Component {
 
 
   goPreviousPage(e) {
-    window.stateMachine.dispatch('previous');
+    window.fsm.goto('formA');
   }
 
 

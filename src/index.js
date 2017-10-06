@@ -29,7 +29,7 @@ window.fsm = new StateMachine({
   transitions: [
     { name: 'start', from: 'none',   to: 'formA'  },
     { name: 'formA', from: 'none',   to: 'formA' },
-    { name: 'formA', from: 'formB',  to: 'none'  },
+    { name: 'formA', from: 'formB',  to: 'formA'  },
     { name: 'formB', from: 'formA',  to: 'formC' },
     { name: 'formC', from: 'formA',  to: 'formD' },
     { name: 'formC', from: 'formB',  to: 'formD' },
