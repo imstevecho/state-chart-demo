@@ -36,8 +36,7 @@ window.stateMachine = _.extend({
               // target: "formC",
               action: function(params) {
                 let s = this.state("formC");
-                if (params.age >= 18) {
-                } else {
+                if (params.age < 18) {
                   s = this.state('formB');
                 }
                 this.transition(s);
