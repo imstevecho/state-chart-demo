@@ -26,7 +26,7 @@ export default class FormA extends Component {
       }
     }
 
-    window.stateMachine.dispatch('next', {...params});
+    window.stateMachine.dispatch('next', params);
 
   }
 
