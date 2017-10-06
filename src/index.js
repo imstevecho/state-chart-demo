@@ -42,6 +42,10 @@ window.fsm = new StateMachine({
           return 'formB';
         }
       }
+    },
+    { name: 'previous',  from: '*', to: function(params) {
+        console.log(params);
+      }
     }
   ],
 
