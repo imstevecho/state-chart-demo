@@ -27,7 +27,10 @@
   },
   "dependencies": {
     "babel-preset-stage-1": "^6.1.18",
+    "install": "^0.10.1",
+    "js-interpreter": "^1.4.6",
     "lodash": "^3.10.1",
+    "npm": "^5.4.2",
     "react": "^0.14.3",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^0.14.3",

@@ -14,9 +14,32 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import _  from 'lodash';
 import * as StateChart from '../lib/statechart'
+import Interpreter from 'js-interpreter';
 
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
+
+
+function addGlobals(interpreter, scope) {
+  var wrapper = function(field) {
+    return interpreter.createPrimitive(Ext[field]);
+  };
+  interpreter.setProperty(scope, 'getGlobal', interpreter.createNativeFunction(wrapper));
+  var wrapper = function(id) {
+    return interpreter.createPrimitive(document.getElementById(id).value);
+  };
+  interpreter.setProperty(scope, 'getLocal', interpreter.createNativeFunction(wrapper));
+
+  var wrapper = function(msg) {
+    console.log(msg);
+  };
+
+  interpreter.setProperty(scope, 'log', interpreter.createNativeFunction(wrapper));
+
+}
+
+
+
 
 
 window.stateMachine = _.extend({
@@ -44,6 +67,11 @@ window.stateMachine = _.extend({
               },
               guard: function(params) {
                 console.log("data validation goes here");
+
+                var input_string = `setGlobal('params', $(params)); log(params.first_name);`;
+                var myInterpreter = new Interpreter(input_string, addGlobals);
+                myInterpreter.run()
+
 
                 if (params.work_or_student  && params.name && params.age) {
                   return true
