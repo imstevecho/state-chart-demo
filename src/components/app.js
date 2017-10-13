@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router'
-import * as StateChart from '../../lib/statechart'
 import { browserHistory } from 'react-router';
 
 export default class App extends Component {
