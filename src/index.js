@@ -20,10 +20,10 @@ import Interpreter from 'js-interpreter';
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
 
+
+var Ext = {version: 5.1};
+
 function addGlobals(interpreter, scope) {
-  var wrapper = function(field) {
-    return interpreter.createPrimitive(Ext[field]);
-  };
 
   var wrapper = function(target, value) {
     return interpreter.setProperty(scope, target, value);
@@ -31,9 +31,12 @@ function addGlobals(interpreter, scope) {
   interpreter.setProperty(scope, 'setGlobal', interpreter.createNativeFunction(wrapper));
 
 
-  var wrapper = function(object, name) {
-    console.log(name);
-    return interpreter.getProperty(object, name);
+  var wrapper = function(obj, name) {
+    // return this.properties[obj].properties[name].data
+    var parent_property = interpreter.getProperty(this, obj);
+    var child_property = interpreter.getProperty(parent_property, name);
+
+    return child_property.data;
   };
   interpreter.setProperty(scope, 'getGlobal', interpreter.createNativeFunction(wrapper));
 
@@ -43,6 +46,7 @@ function addGlobals(interpreter, scope) {
   };
   interpreter.setProperty(scope, 'getLocal', interpreter.createNativeFunction(wrapper));
 
+
   var wrapper = function(msg) {
     console.log(msg.data);
   };
@@ -50,6 +54,14 @@ function addGlobals(interpreter, scope) {
 
 
   var wrapper = function() {
+
+    var v = this.properties['vparams'].properties['name'].data;
+    debugger;
+
+    var age = interpreter.getGlobal('vparams', 'age');
+    debugger;
+    console.log(age);
+
     return true;
   };
   interpreter.setProperty(scope, 'canProceed', interpreter.createNativeFunction(wrapper));
@@ -88,7 +100,8 @@ window.stateMachine = _.extend({
                 console.log("data validation goes here");
 
                 var string_params = JSON.stringify(params);
-                var input_string = "setGlobal('params', " + string_params + "); log(getGlobal(this, 'name')); log(params.age); log(canProceed());";
+                console.log("json string: ", string_params);
+                var input_string = "setGlobal('vparams', " + string_params + ");  log('getGlobal result: ' + getGlobal('vparams', 'name')); log(vparams.age); log('canProcess result: ' + canProceed());";
 
 
                 var myInterpreter = new Interpreter(input_string, addGlobals);
