@@ -41,6 +41,12 @@ function addGlobals(interpreter, scope) {
   interpreter.setProperty(scope, 'getGlobal', interpreter.createNativeFunction(wrapper));
 
 
+  var wrapper = function(form_data) {
+    return interpreter.createPrimitive(form_data);
+  };
+  interpreter.setProperty(scope, 'setFormData', interpreter.createNativeFunction(wrapper));
+
+
   var wrapper = function(id) {
     return interpreter.createPrimitive(document.getElementById(id).value);
   };
@@ -54,6 +60,7 @@ function addGlobals(interpreter, scope) {
 
 
   var wrapper = function() {
+
 
     var v = this.properties['vparams'].properties['name'].data;
     debugger;
@@ -101,7 +108,7 @@ window.stateMachine = _.extend({
 
                 var string_params = JSON.stringify(params);
                 console.log("json string: ", string_params);
-                var input_string = "setGlobal('vparams', " + string_params + ");  log('getGlobal result: ' + getGlobal('vparams', 'name')); log(vparams.age); log('canProcess result: ' + canProceed());";
+                var input_string = "setFormData(" + string_params + "); setGlobal('vparams', " + string_params + ");  log('getGlobal result: ' + getGlobal('vparams', 'name')); log(vparams.age); log('canProcess result: ' + canProceed());";
 
 
                 var myInterpreter = new Interpreter(input_string, addGlobals);
