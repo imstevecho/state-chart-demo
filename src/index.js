@@ -15,7 +15,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import _  from 'lodash';
 import * as StateChart from '../lib/statechart'
 import Interpreter from 'js-interpreter';
-
+"use strict";
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
@@ -24,17 +24,36 @@ function addGlobals(interpreter, scope) {
   var wrapper = function(field) {
     return interpreter.createPrimitive(Ext[field]);
   };
+
+  var wrapper = function(target, value) {
+    return interpreter.setProperty(scope, target, value);
+  };
+  interpreter.setProperty(scope, 'setGlobal', interpreter.createNativeFunction(wrapper));
+
+
+  var wrapper = function(object, name) {
+    console.log(name);
+    return interpreter.getProperty(object, name);
+  };
   interpreter.setProperty(scope, 'getGlobal', interpreter.createNativeFunction(wrapper));
+
+
   var wrapper = function(id) {
     return interpreter.createPrimitive(document.getElementById(id).value);
   };
   interpreter.setProperty(scope, 'getLocal', interpreter.createNativeFunction(wrapper));
 
   var wrapper = function(msg) {
-    console.log(msg);
+    console.log(msg.data);
   };
-
   interpreter.setProperty(scope, 'log', interpreter.createNativeFunction(wrapper));
+
+
+  var wrapper = function() {
+    return true;
+  };
+  interpreter.setProperty(scope, 'canProceed', interpreter.createNativeFunction(wrapper));
+
 
 }
 
@@ -68,10 +87,14 @@ window.stateMachine = _.extend({
               guard: function(params) {
                 console.log("data validation goes here");
 
-                var input_string = `setGlobal('params', $(params)); log(params.first_name);`;
+                var string_params = JSON.stringify(params);
+                var input_string = "setGlobal('params', " + string_params + "); log(getGlobal(this, 'name')); log(params.age); log(canProceed());";
+
+
                 var myInterpreter = new Interpreter(input_string, addGlobals);
                 myInterpreter.run()
 
+                debugger;
 
                 if (params.work_or_student  && params.name && params.age) {
                   return true

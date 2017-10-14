@@ -10,7 +10,6 @@ export default class FormA extends Component {
 
   componentDidMount() {
 
-    console.log("current state: ", window.fsm.state);
     // window.stateMachine.initialState = 'formB';
     // window.stateMachine.run();
   }
@@ -27,7 +26,8 @@ export default class FormA extends Component {
       }
     }
 
-    window.fsm.next(params);
+    window.stateMachine.dispatch('next', {...params});
+
   }
 
 
