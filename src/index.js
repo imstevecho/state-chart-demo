@@ -25,6 +25,18 @@ var Ext = {version: 5.1};
 
 function addGlobals(interpreter, scope) {
 
+
+  var wrapper = function(form_id, input_id) {
+    var form = document.getElementById(form_id);
+    if (form) {
+      return interpreter.createPrimitive(form.elements[input_id].value);
+    } else {
+      return null;
+    }
+  };
+  interpreter.setProperty(scope, 'getFormData', interpreter.createNativeFunction(wrapper));
+
+
   var wrapper = function(target, value) {
     return interpreter.setProperty(scope, target, value);
   };
@@ -33,18 +45,19 @@ function addGlobals(interpreter, scope) {
 
   var wrapper = function(obj, name) {
     // return this.properties[obj].properties[name].data
-    var parent_property = interpreter.getProperty(this, obj);
-    var child_property = interpreter.getProperty(parent_property, name);
-
-    return child_property.data;
+    // var parent_property = interpreter.getProperty(this, obj);
+    
+    var parent_property = interpreter.getValueFromScope(obj);
+    
+    if (arguments.length === 1) {
+      return parent_property;
+    } else {
+      var child_property = interpreter.getProperty(parent_property, name);
+      return child_property.data;
+    }
   };
   interpreter.setProperty(scope, 'getGlobal', interpreter.createNativeFunction(wrapper));
 
-
-  var wrapper = function(form_data) {
-    return interpreter.createPrimitive(form_data);
-  };
-  interpreter.setProperty(scope, 'setFormData', interpreter.createNativeFunction(wrapper));
 
 
   var wrapper = function(id) {
@@ -59,19 +72,17 @@ function addGlobals(interpreter, scope) {
   interpreter.setProperty(scope, 'log', interpreter.createNativeFunction(wrapper));
 
 
-  var wrapper = function() {
+  // var wrapper = function() {
 
 
-    var v = this.properties['vparams'].properties['name'].data;
-    debugger;
+  //   var v = this.properties['vparams'].properties['name'].data;
 
-    var age = interpreter.getGlobal('vparams', 'age');
-    debugger;
-    console.log(age);
+  //   var age = interpreter.getGlobal('vparams', 'age');
+  //   console.log(age);
 
-    return true;
-  };
-  interpreter.setProperty(scope, 'canProceed', interpreter.createNativeFunction(wrapper));
+  //   return true;
+  // };
+  // interpreter.setProperty(scope, 'canProceed', interpreter.createNativeFunction(wrapper));
 
 
 }
@@ -87,11 +98,11 @@ window.stateMachine = _.extend({
     states: {
         "formA": {
             "entry": function() {
-              console.log("Came to formA");
+              // console.log("Came to formA");
               browserHistory.push('/formA');
             },
             "exit": function() {
-              console.log("came to can exit");
+              // console.log("came to can exit");
             },
             "next":  {
               // target: "formC",
@@ -104,11 +115,17 @@ window.stateMachine = _.extend({
                 this.transition(s);
               },
               guard: function(params) {
-                console.log("data validation goes here");
+                // console.log("data validation goes here");
+
+
+                var json = {
+                  canShow: "getFormValue('personal_info', 'age') > 18"
+                }
+
 
                 var string_params = JSON.stringify(params);
                 console.log("json string: ", string_params);
-                var input_string = "setFormData(" + string_params + "); setGlobal('vparams', " + string_params + ");  log('getGlobal result: ' + getGlobal('vparams', 'name')); log(vparams.age); log('canProcess result: ' + canProceed());";
+                var input_string = "var age = getFormData('personal_info', 'age'); if (age > 18) { log('greater than 18'); } else { log('less than 18');}; var test = function(msg) { log('Got ' + msg)}; setGlobal('vparams', " + string_params + ");  var hash = vparams; log('--here start---'); log(hash.age); log('--here end---'); test(vparams.name); log('getGlobal result: ' + getGlobal('vparams', 'name')); log(vparams.age); log(vparams.name); //log('canProcess result: ' + canProceed());";
 
 
                 var myInterpreter = new Interpreter(input_string, addGlobals);
@@ -127,8 +144,8 @@ window.stateMachine = _.extend({
         },
         "formB": {
             "entry": function(params) {
-              console.log("Came to formB");
-              console.log(params);
+              // console.log("Came to formB");
+              // console.log(params);
               browserHistory.push('/formB');
             },
             "next":  { target: "formC"  },
@@ -138,8 +155,8 @@ window.stateMachine = _.extend({
         },
         "formC": {
             "entry": function(params) {
-              console.log("Came to formC");
-              console.log(params);
+              // console.log("Came to formC");
+              // console.log(params);
               browserHistory.push('/formC');
             },
             "next":  { target: "formD"  },

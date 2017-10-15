@@ -35,7 +35,7 @@ export default class FormA extends Component {
     return (
       <div>
         <h1>Input Form A</h1>
-        <form onSubmit={this.handleSubmitClicked}>
+        <form id='personal_info' onSubmit={this.handleSubmitClicked}>
           <div className="form-group">
           <hr/>
             <label htmlFor="name">Name:</label>
