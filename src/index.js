@@ -15,16 +15,27 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import _  from 'lodash';
 import * as StateChart from '../lib/statechart'
 import Interpreter from 'js-interpreter';
+import ControlFlow from './control_flow.json';
+
 "use strict";
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
 
 
+// const FLOW_DESC = {
+//   formA: {
+//     canLand: "initialForm.agreed === true",
+//     canSkip: "formA.name.length > 0",
+//     nextStep: "formA.age < 18 ? 'formB' : 'formC'",
+//   }
+// }
+
 var Ext = {version: 5.1};
 
 function addGlobals(interpreter, scope) {
 
+  interpreter['FLOW_DESC'] = ControlFlow;
 
   var wrapper = function(form_id, input_id) {
     var form = document.getElementById(form_id);
@@ -46,9 +57,9 @@ function addGlobals(interpreter, scope) {
   var wrapper = function(obj, name) {
     // return this.properties[obj].properties[name].data
     // var parent_property = interpreter.getProperty(this, obj);
-    
+
     var parent_property = interpreter.getValueFromScope(obj);
-    
+
     if (arguments.length === 1) {
       return parent_property;
     } else {

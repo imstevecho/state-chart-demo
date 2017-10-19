@@ -1,0 +1,7 @@
+export default {
+  formA: {
+    canLand: "initialForm.agreed === true",
+    canSkip: "formA.name.length > 0",
+    nextStep: "formA.age < 18 ? 'formB' : 'formC'"
+  }
+}
