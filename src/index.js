@@ -94,31 +94,28 @@ window.stateMachine = _.extend({
 
     initialState: "formA",
 
+
+    setVar: function(formula, data){
+      return "setGlobal('initial_form', " + data + "); var initialForm = initial_form; log('initialFrom data: ' + initialForm.agreed); setGlobal('result', " + formula + ")";
+    },
+
     states: {
         "formA": {
             "entry": function() {
 
-                var initial_form = JSON.stringify({agreed: true});
+                const initial_form = JSON.stringify({agreed: true});
+                const code = this.setVar(ControlFlow.formA.canLand, initial_form);
+                const myInterpreter = new Interpreter(code, addGlobals);
 
-                var flow_info = ControlFlow.formA.canLand;
-
-                console.log("flow_info: ", flow_info);
-                var input_string = "setGlobal('initial_form', " + initial_form + "); var initialForm = initial_form; log('initialFrom data: ' + initialForm.agreed); setGlobal('result', " + flow_info + ")";
-
-                // "var age = getFormData('personal_info', 'age'); if (age > 18) { log('greater than 18'); } else { log('less than 18');}; var test = function(msg) { log('Got ' + msg)}; setGlobal('vparams', " + string_params + ");  var hash = vparams; log('--here start---'); log(hash.age); log('--here end---'); test(vparams.name); log('getGlobal result: ' + getGlobal('vparams', 'name')); log(vparams.age); log(vparams.name); //log('canProcess result: ' + canProceed());";
-
-
-                var myInterpreter = new Interpreter(input_string, addGlobals);
                 myInterpreter.run();
-                console.log('result: ' + myInterpreter.getValue('result'));
-
-                debugger;
-
-              // console.log("Came to formA");
-              browserHistory.push('/formA');
+                const result = myInterpreter.getValue('result');
+                if (result) {
+                  browserHistory.push('/formA');                  
+                }
+                console.log('result: ' + result);
             },
             "exit": function() {
-              // console.log("came to can exit");
+              console.log("before exiting");
             },
             "next":  {
               // target: "formC",
@@ -146,8 +143,6 @@ window.stateMachine = _.extend({
 
                 var myInterpreter = new Interpreter(input_string, addGlobals);
                 myInterpreter.run()
-
-                debugger;
 
                 if (params.work_or_student  && params.name && params.age) {
                   return true

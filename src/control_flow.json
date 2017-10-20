@@ -1,6 +1,9 @@
 export default {
   pageFlow: ['formA', 'formB', 'formC', 'formD'],
   formA: {
+  	page: "fromA",
+  	previous: "Intro",
+  	next: 'fromB',
     canLand: "initialForm.agreed === true",
     canSkip: "formA.name.length > 0",
     nextStep: "formA.age < 18 ? 'formB' : 'formC'"
