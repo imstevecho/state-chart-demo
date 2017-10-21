@@ -87,13 +87,20 @@ function addGlobals(interpreter, scope) {
 }
 
 
-
+var dataA = {
+  agreed: true
+};
 
 
 window.stateMachine = _.extend({
 
     initialState: "formA",
 
+    config: ControlFlow,
+
+    setConfig: function(json) {
+      this.config = json;
+    },
 
     setVar: function(formula, data){
       return "setGlobal('initial_form', " + data + "); var initialForm = initial_form; log('initialFrom data: ' + initialForm.agreed); setGlobal('result', " + formula + ")";
@@ -101,9 +108,10 @@ window.stateMachine = _.extend({
 
     states: {
         "formA": {
-            "entry": function() {
+            "entry": function(params) {
 
-                const initial_form = JSON.stringify({agreed: true});
+                var current_state = this.currentState().name;
+                const initial_form = JSON.stringify(dataA);
                 const code = this.setVar(ControlFlow.formA.canLand, initial_form);
                 const myInterpreter = new Interpreter(code, addGlobals);
 
@@ -194,5 +202,5 @@ ReactDOM.render((
   , document.querySelector('.container'));
 
 
-window.stateMachine.run();
+window.stateMachine.run({foo: 'bar'});
 
