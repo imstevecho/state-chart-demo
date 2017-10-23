@@ -103,7 +103,8 @@ window.stateMachine = _.extend({
     },
 
     setVar: function(formula, data){
-      return "setGlobal('initial_form', " + data + "); var initialForm = initial_form; log('initialFrom data: ' + initialForm.agreed); setGlobal('result', " + formula + ")";
+      // return "setGlobal('initial_form', " + data + "); var initialForm = initial_form; log('initialFrom data: ' + initialForm.agreed); setGlobal('result', " + formula + ")";
+      return "setGlobal('initialForm', " + data + "); log('initialFrom data: ' + initialForm.agreed); setGlobal('result', " + formula + ")";
     },
 
     states: {
@@ -118,7 +119,7 @@ window.stateMachine = _.extend({
                 myInterpreter.run();
                 const result = myInterpreter.getValue('result');
                 if (result) {
-                  browserHistory.push('/formA');                  
+                  browserHistory.push('/formA');
                 }
                 console.log('result: ' + result);
             },
