@@ -16,6 +16,27 @@ import _  from 'lodash';
 import * as StateChart from '../lib/statechart'
 import Interpreter from 'js-interpreter';
 import ControlFlow from './control_flow.json';
+import Benchmark from "./benchmark";
+
+
+
+const times = x => f => {
+  if (x > 0) {
+    f()
+    times (x - 1) (f)
+  }
+}
+
+var s = new Date();
+times (200) (() => Benchmark())
+var e = new Date();
+
+var diff = e - s;
+console.log(`............. it took ${diff/1000} seconds`);
+
+
+
+
 
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
