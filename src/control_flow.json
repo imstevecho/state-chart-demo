@@ -1,11 +1,63 @@
-export default {
-  pageFlow: ['formA', 'formB', 'formC', 'formD'],
-  formA: {
-  	page: "fromA",
-  	previous: "Intro",
-  	next: 'fromB',
-    canLand: "initialForm.agreed === true",
-    canSkip: "formA.name.length > 0",
-    nextStep: "formA.age < 18 ? 'formB' : 'formC'"
+export default state_definition = {
+  routes: {
+    initial: '/start',
+    maleHealth: '/maleHealth',
+    femaleHealth: '/femaleHealth',
+    elderlyMale: '/elderlyFemale',
+    elderlyFemale: '/elderlyFemale',
+    eligibility: '/eligibility',
+    address: '/address',
+    thankyou: '/thankyou',
   }
+  initial: {
+    canLand: true,
+    canShowDisable: 1,  // 0: don't show, 1: show, 2: show & disable
+    canSave: "['Male', 'Female'].includes(me.gender)",
+    next: "me.gender === 'M' ? 'maleHealth' : 'femaleHealth'",
+    previous: ""
+  },
+  maleHealth: {
+    canLand: "me.gender === 'Male'",
+    canShowDisable: "me.gender === 'Male' ? 1 : 0",
+    canSave: "me.age > 0",
+    next: "me.age >= 65 ? 'elderlyMale' : 'eligibility'",
+    previous: "initial",
+  },
+  femaleHealth: {
+    canLand: "me.gender === 'Female'",
+    canShowDisable: "me.gender === 'Female' ? 1 : 0",
+    canSave: "",
+    next: "me.age >= 65 ? 'elderlyFemale' : 'eligibility'",
+    previous: "initial",
+  },
+  elderlyMale: {
+    canLand: "me.gender === 'Male' && me.age >= 65",
+    canShowDisable: "me.gender === 'Male' ? 1 : 0",
+    canSave: "",
+    next: "eligibility",
+    previous: "maleHealth",
+  },
+  elderlyFemale: {
+    canLand: "me.gender === 'Female' && me.age >= 65",
+    canShowDisable: "me.gender === 'Female' ? 1 : 0",
+    canSave: "",
+    next: "eligibility",
+    previous: "femaleHealth",
+  },
+  eligibility: {
+    canLand: "entry_requirement()",
+    canShowDisable: "entry_requirement() ? 1 : 2",
+    canSave: "",
+    next: "me.age > 65 ? 'elderlyFemale' : 'eligibility'",
+    entry_requirement: "maleHealth.visited() || femaleHealth.visited() || elderlyMale.visited() || elderlyFemale.visited()"
+    previous: "if (elderlyMale.visited()) { return elderlyMale } else if (elderlyFemale.visited()) { return elderlyFemale } else if (femaleHealth.visited()) { return femaleHealth } else if (maleHealth.visited()) { return maleHealth }",
+  },
+  address: {
+    canLand: "eligibility.visited()",
+    canShowDisable: "eligibility.visited() ? 1 : 2",
+    canSave: "",
+    next: "eligibility",
+    previous: "eligibility",
+  },
+
 }

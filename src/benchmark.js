@@ -47,7 +47,7 @@ var data = {
 export default function runBenchmark() {
   const stringCode = "initialForm.age > 18 && initialForm.gender === 'Male' && initialForm.province === 'ON'";
   const formData = JSON.stringify(data);
-  const code = "setGlobal('initial_form', " + formData + "); var initialForm = initial_form; log('initialFrom data: ' + initialForm.age); setGlobal('result', " + stringCode + ")";
+  const code = "setGlobal('initial_form', " + formData + "); var initialForm = initial_form; setGlobal('result', " + stringCode + ")";
 
 
   // console.log(code);
